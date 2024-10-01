@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crypto Nexus</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css" />
+    <link rel="icon" type="image/x-icon" href="/static/svg/favicon.svg">
+    <style>
+      .button-container {
+        display: flex;
+        justify-content: center;
+        border: 2px solid #ccc; /* Border around the button container */
+        border-radius: 8px;
+        padding: 10px;
+        margin: 20px 0;
+      }
+      
+      .btc-value-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px; /* Space between action buttons and BTC value button */
+      }
+      .btc-value-button {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        background-color: #111111;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        transition: background-color 0.3s;
+      }
+      .btc-value-button:hover {
+        background-color: #111111; /* Hover effect */
+      }
+      .btc-icon {
+        margin-right: 5px; /* Spacing for the icon */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+     <img src='/static/Logo.png' style="max-width: 100%; max-height: 100%; object-fit: contain;"></img>
+
+        <!-- Profile Button -->
+        <div class="profile-container">
+          <button class="profile-button" onclick="toggleDropdown()"><i class="fa-solid fa-user"></i></button>
+          <div id="profileDropdown" class="dropdown">
+              <a href="/me">View Profile</a>
+              <a href="/history">Transaction History</a>
+              <a href="/logout">Logout</a>
+          </div>
+      </div>
+
+       <!-- btc Button -->
+       <div class="btc-container">
+        <button class="btc-button" onclick="toggleBtcDropdown()"><i class="fa-solid fa-bitcoin-sign"></i></button>
+        <div id="btcDropdown" class="dropdown">
+            <a href="https://coinmarketcap.com/currencies/bitcoin/">BTC Price</a>
+            <a href="https://bitpay.com/directory/">Merchants Taking BTC</a>
+            <a href="https://in.tradingview.com/symbols/BTCUSD/">BTC Chart</a>
+        </div>
+    </div>
+      
+      <div id="successModal" style="display: none">
+        <div>
+          <p id="modalMessage"></p>
+          <button onclick="closeModal()">Close</button>
+        </div>
+      </div>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      {% for category, message in messages %}
+      <div class="message {{ category }}">{{ message }}</div>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+
+      <div class="button-container">
+        <button onclick="openTab(event, 'send')" class="action-button">
+          <i class="fas fa-paper-plane"></i> 
+        </button>
+        <button onclick="openTab(event, 'upload')" class="action-button">
+          <i class="fas fa-upload"></i> 
+        </button>
+        <button onclick="openTab(event, 'scan')" class="action-button">
+          <i class="fas fa-camera"></i> 
+        </button>
+      </div>
+
+      
+
+      <!-- Tab Content -->
+      <div id="send" class="tab" style="display: none">
+        <form method="POST" action="{{ url_for('index') }}">
+          <div class="form-group">
+            <label for="receiver_address">Receiver Address:</label>
+            <input
+              type="text"
+              id="receiver_address"
+              name="receiver_address"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="amount">Amount (BTC):</label>
+            <input
+              type="number"
+              id="amount"
+              name="amount"
+              step="0.00000001"
+              required
+            />
+          </div>
+          <button type="submit">
+            <i class="fas fa-paper-plane"></i> Send BTC
+          </button>
+        </form>
+      </div>
+
+      <!-- Upload QR Code tab -->
+      <div id="upload" class="tab" style="display: none">
+        <form
+          method="POST"
+          enctype="multipart/form-data"
+          action="{{ url_for('process_scan') }}"
+          onsubmit="return handleImageUpload(event)"
+        >
+          <div class="form-group">
+            <label for="image">Upload QR Code Image:</label>
+            <input
+              type="file"
+              id="image"
+              name="image"
+              accept="image/*"
+              required
+            />
+          </div>
+          <button type="submit">
+            <i class="fas fa-upload"></i> Scan QR Code
+          </button>
+        </form>
+
+        <div id="detectedAddress" class="form-group" style="display: none">
+          <label>Detected Address:</label>
+          <input type="text" id="address" readonly />
+        </div>
+
+        <!-- Send BTC form with autofilled address -->
+        <form method="POST" action="{{ url_for('index') }}">
+          <div class="form-group">
+            <label for="receiver_address_upload">Receiver Address:</label>
+            <input
+              type="text"
+              id="receiver_address_upload"
+              name="receiver_address"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="amount_upload">Amount (BTC):</label>
+            <input
+              type="number"
+              id="amount_upload"
+              name="amount"
+              step="0.00000001"
+              required
+            />
+          </div>
+          <button type="submit">
+            <i class="fas fa-paper-plane"></i> Send BTC
+          </button>
+        </form>
+      </div>
+
+      <!-- Scan QR Code tab -->
+      <div id="scan" class="tab" style="display: none">
+        <div id="cameraContainer">
+          <h2>Scanning...</h2>
+          <img
+            src="{{ url_for('video_feed') }}"
+            style="width: 100%; border-radius: 8px"
+          />
+          <p>Please hold a QR code in front of the camera.</p>
+        </div>
+        <button onclick="openCamera()">
+          <i class="fas fa-camera"></i> Open Camera
+        </button>
+
+        <!-- Input fields for sending BTC -->
+        <form method="POST" action="{{ url_for('index') }}">
+          <div class="form-group">
+            <label for="receiver_address_scan">Receiver Address:</label>
+            <input
+              type="text"
+              id="receiver_address_scan"
+              name="receiver_address"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="amount_scan">Amount (BTC):</label>
+            <input
+              type="number"
+              id="amount_scan"
+              name="amount"
+              step="0.00000001"
+              required
+            />
+          </div>
+          <button type="submit">
+            <i class="fas fa-paper-plane"></i> Send BTC
+          </button>
+        </form>
+      </div>
+
+      <div class="card-container">
+        <div class="card">
+          <h2>Recent Transactions</h2>
+          {% if last_transactions %}
+            <table class="transaction-table">
+              <thead>
+                <tr>
+                  <th>Receiver Address</th>
+                  <th>Amount (BTC)</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for transaction in last_transactions %}
+                  <tr>
+                    <td>{{ transaction[0] }}</td>
+                    <td>{{ transaction[1] }}</td>
+                    <td>{{ transaction[2] }}</td>
+                    <td>{{ transaction[3] }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          {% else %}
+            <p>No transactions found.</p>
+          {% endif %}
+        </div>
+      </div>
+      
+    
+      </div>
+
+      
+      </div>
+
+    </div>
+    </div>
+
+    
+
+    <footer>
+      <p>&copy; {{ current_year }} Crypto Nexus | <a href="https://bitcoin.com">Get Help</a> | <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">License</a> </p>
+    </footer>
+
+    <script src="/static/script.js"></script>
+  </body>
+</html>

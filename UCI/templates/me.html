@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Information</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/x-icon" href="/static/svg/favicon.svg" />
+    <link rel="stylesheet" href="/static/me.css" />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f9f9f9; /* Light mode background */
+        margin: 0;
+        padding: 0;
+        transition: background-color 0.3s, color 0.3s; /* Smooth transitions */
+      }
+
+      body::before {
+        content: ""; /* Necessary for pseudo-element */
+        position: fixed; /* Fixed positioning to cover the entire viewport */
+        top: 0;
+        left: 0;
+        width: 100vw; /* Cover full width of the viewport */
+        height: 200vh; /* Extend height to 200 times the viewport height */
+        background-image: url("/static/svg/Bitcoin.svg"); /* Path to your SVG */
+        background-size: 20% 20%; /* Increase size to create gaps between tiles */
+        background-repeat: repeat; /* Repeat in both directions */
+        background-position: center; /* Center the SVG */
+        transform: rotate(0deg); /* No rotation */
+        z-index: -1; /* Send it behind other elements */
+        opacity: 0.1; /* Optional: Adjust opacity to make it less dominant */
+      }
+
+      body.dark-mode {
+        background-color: #1e1e1e; /* Dark mode background */
+        color: #f9f9f9; /* Dark mode text color */
+      }
+
+      .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .card {
+        background: #ffffff; /* Light mode card background */
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        width: 400px; /* Width remains unchanged */
+        display: flex;
+        flex-direction: column;
+        align-items: stretch; /* Allow elements to stretch to full width */
+        transition: background 0.3s; /* Smooth transition */
+      }
+
+      body.dark-mode .card {
+        background: #2a2a2a; /* Dark mode card background */
+      }
+
+      h1 {
+        margin-bottom: 20px;
+        font-weight: 600;
+        color: #333;
+        text-align: center;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+        width: 100%; /* Full width for form group */
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+        color: #333;
+        text-align: left; /* Align label text to the left */
+      }
+
+      input[type="text"],
+      input[type="email"] {
+        width: 100%; /* Full width for inputs */
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        transition: border 0.3s;
+        box-sizing: border-box; /* Padding included in width */
+      }
+
+      input[type="text"]:focus,
+      input[type="email"]:focus {
+        border-color: #111111;
+        outline: none;
+      }
+
+      button {
+        background-color: #111111;
+        color: #ffffff;
+        border: none;
+        padding: 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 100%; /* Full width for button */
+        transition: background-color 0.3s;
+        font-weight: 600;
+        margin-top: 10px; /* Adds space above button */
+      }
+
+      button:hover {
+        background-color: #272727;
+      }
+
+      .messages {
+        list-style-type: none;
+        padding: 0;
+        margin: 20px 0;
+        width: 100%; /* Full width for messages */
+        text-align: center; /* Center error messages */
+      }
+
+      li {
+        color: #d9534f; /* Customize the error message color */
+      }
+
+      /* Toggle switch styles */
+      .switch {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+      }
+
+      .switch input {
+        display: none;
+      }
+
+      .slider {
+        position: relative;
+        cursor: pointer;
+        width: 34px;
+        height: 20px;
+        background-color: #ccc;
+        border-radius: 34px;
+        transition: background-color 0.4s;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 2px;
+        bottom: 2px;
+        background-color: white;
+        border-radius: 50%;
+        transition: transform 0.4s;
+      }
+
+      input:checked + .slider {
+        background-color: #2196f3;
+      }
+
+      input:checked + .slider:before {
+        transform: translateX(14px);
+      }
+
+      /* Balance display styles */
+      .balance {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background-color: #f0f0f0; /* Light background for balance */
+        text-align: center; /* Center align balance text */
+        margin-top: 10px; /* Space above the balance display */
+      }
+    </style>
+  </head>
+  <body class="light-mode">
+    <div class="container">
+      <div class="card">
+        <h1>User Information</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if
+        messages %}
+        <ul class="messages">
+          {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %} {% endwith %}
+
+        <form method="POST" action="{{ url_for('me') }}">
+          <div class="form-group">
+            <label for="name">Name:</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value="{{ user_info.name if user_info.name else '' }}"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value="{{ user_info.email if user_info.email else '' }}"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="btc_address">Bitcoin Address:</label>
+            <input
+              type="text"
+              id="btc_address"
+              name="btc_address"
+              value="{{ config.btc_address if config.btc_address else '' }}"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="btc_private_key">Bitcoin Private Key:</label>
+            <input
+              type="text"
+              id="btc_private_key"
+              name="btc_private_key"
+              value="{{ config.btc_private_key if config.btc_private_key else '' }}"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="balance">Balance:</label>
+            <div class="balance">
+              {{ user_info.balance if user_info.balance else '0.00' }} BTC
+            </div>
+          </div>
+          <button type="submit">Save Information</button>
+        </form>
+      </div>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const toggle = document.getElementById("theme-toggle");
+        const body = document.body;
+
+        // Check for saved user preference
+        const currentTheme = localStorage.getItem("theme");
+        if (currentTheme) {
+          body.classList.remove("light-mode", "dark-mode");
+          body.classList.add(currentTheme);
+          toggle.checked = currentTheme === "dark-mode";
+        }
+
+        // Toggle theme on checkbox change
+        toggle.addEventListener("change", function () {
+          if (this.checked) {
+            body.classList.remove("light-mode");
+            body.classList.add("dark-mode");
+            localStorage.setItem("theme", "dark-mode");
+          } else {
+            body.classList.remove("dark-mode");
+            body.classList.add("light-mode");
+            localStorage.setItem("theme", "light-mode");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

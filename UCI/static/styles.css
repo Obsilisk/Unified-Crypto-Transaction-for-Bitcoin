@@ -1,0 +1,458 @@
+body {
+  font-family: "Inter", sans-serif; /* Using Inter font */
+  background-color: #f4f4f4; /* Light mode background */
+  color: #333;
+  margin: 0;
+  padding: 20px;
+  transition: background-color 0.3s, color 0.3s; /* Smooth transitions */
+  position: relative; /* Position relative for absolute positioning of background */
+  /* overflow: hidden; */
+}
+
+body::before {
+  content: ""; /* Necessary for pseudo-element */
+  position: fixed; /* Fixed positioning to cover the entire viewport */
+  top: 0;
+  left: 0;
+  width: 100vw; /* Cover full width of the viewport */
+  height: 200vh; /* Extend height to 200 times the viewport height */
+  background-image: url("/static/svg/Bitcoin.svg"); /* Path to your SVG */
+  background-size: 20% 20%; /* Increase size to create gaps between tiles */
+  background-repeat: repeat; /* Repeat in both directions */
+  background-position: center; /* Center the SVG */
+  transform: rotate(0deg); /* No rotation */
+  z-index: -1; /* Send it behind other elements */
+  opacity: 0.1; /* Optional: Adjust opacity to make it less dominant */
+}
+
+body.dark-mode {
+  background-color: #161616; /* Dark mode background */
+  color: #f4f4f4; /* Dark mode text color */
+}
+
+h1 {
+  text-align: center;
+  color: #111111;
+}
+
+.container {
+  max-width: 600px;
+  margin: auto;
+  background: white; /* Light mode container background */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: background 0.3s; /* Smooth transition */
+}
+
+body.dark-mode .container {
+  background: #161616; /* Dark mode container background */
+}
+
+.tab {
+  display: none;
+}
+
+.tab-header {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+  background-color: #e9ecef; /* Light mode tab header background */
+  padding: 10px;
+  border-radius: 8px;
+}
+
+body.dark-mode .tab-header {
+  background-color: #161616; /* Dark mode tab header background */
+}
+
+.tab-header button {
+  background: none;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  border-bottom: 2px solid transparent;
+  transition: border-bottom 0.3s;
+  color: #111111;
+}
+
+body.dark-mode .tab-header button {
+  color: #f4f4f4; /* Dark mode tab text color */
+}
+
+.tab-header button.active {
+  border-bottom: 2px solid #111111;
+  color: #111111;
+}
+
+body.dark-mode .tab-header button.active {
+  border-bottom: 2px solid #f4f4f4; /* Dark mode active tab underline */
+  color: #f4f4f4; /* Dark mode active tab text color */
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+body.dark-mode input[type="text"],
+body.dark-mode input[type="number"],
+body.dark-mode input[type="file"] {
+  border: 1px solid #161616; /* Dark mode input border color */
+  background-color: #161616; /* Dark mode input background color */
+  color: #f4f4f4; /* Dark mode input text color */
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #111111;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #c0c0c0; /* Light mode button hover */
+}
+
+body.dark-mode button {
+  background-color: #333; /* Dark mode button background */
+}
+
+body.dark-mode button:hover {
+  background-color: #444; /* Dark mode button hover */
+}
+
+.message {
+  margin: 15px 0;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.error {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+footer {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: #777;
+}
+
+#cameraContainer {
+  display: none;
+  text-align: center;
+}
+
+.payment-section {
+  margin-top: 20px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center; /* Center the buttons */
+  gap: 10px; /* Space between buttons */
+  padding-bottom: 20px;
+}
+
+.action-button {
+  background-color: #111111; /* Green background */
+  color: white; /* White text */
+  border: none; /* Remove border */
+  padding: 20px; /* Equal padding for square shape */
+  text-align: center; /* Center text */
+  text-decoration: none; /* Remove underline */
+  display: inline-block; /* Inline block for buttons */
+  font-size: 16px; /* Font size */
+  border-radius: 8px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s; /* Smooth background change */
+}
+
+.action-button:hover {
+  background-color: #1d1d1d; /* Darker green on hover */
+}
+
+.theme-toggle {
+  position: absolute; /* Position it relative to the nearest positioned ancestor */
+  top: 20px; /* Distance from the top */
+  right: 20px; /* Distance from the right */
+  z-index: 1000; /* Ensure it’s above other elements */
+}
+
+#theme-icon {
+  font-size: 24px; /* Adjust icon size */
+  color: #333; /* Color for the icon */
+}
+
+body.dark-mode {
+  background-color: #121212; /* Dark background */
+  color: #ffffff; /* Light text */
+}
+
+body.dark-mode .message {
+  background-color: #333; /* Dark background for messages */
+  color: #fff; /* Light text for messages */
+}
+
+.btc-value-container {
+  border-radius: 8px; /* Optional: Rounded corners */
+  text-align: center; /* Center the content */
+}
+
+.btc-value-button {
+  color: white; /* Set text color to white */
+  font-size: 1.2em; /* Optional: Adjust font size */
+}
+
+.btc-icon {
+  margin-left: 5px; /* Space between the number and the icon */
+}
+
+.profile-button {
+  position: absolute;
+  top: 20px; /* Adjust the vertical positioning */
+  right: 20px; /* Adjust the horizontal positioning */
+  background-color: #111111; /* Optional: style the button */
+  padding: 10px 15px;
+  border-radius: 5px;
+  color: white;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+.profile-button:hover {
+  background-color: #444444; /* Hover effect */
+}
+
+.card-container {
+  display: flex; /* Use flexbox to center children */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically (if necessary) */
+  width: 100%;
+  max-width: 1000px; /* Limit the width of the card */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.card {
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 100%;
+  max-width: 600px; /* Optional: limit the card's width */
+}
+
+.transaction-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: "Inter", sans-serif;
+  table-layout: fixed; /* Prevents the table from expanding beyond container */
+}
+
+.transaction-table thead th {
+  background-color: #111111;
+  color: #ffffff;
+  padding: 10px;
+  text-align: left;
+}
+
+.transaction-table tbody td {
+  padding: 10px;
+  border-bottom: 1px solid #dddddd;
+}
+
+.transaction-table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.transaction-table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.transaction-table td,
+.transaction-table th {
+  font-size: 1rem;
+}
+
+/* Prevent overflow of long addresses */
+.transaction-table td:first-child {
+  max-width: 250px; /* Adjust this to the preferred width */
+  word-wrap: break-word; /* Wraps the long text */
+  /* overflow: hidden; */
+  text-overflow: ellipsis; /* Adds ellipsis for long text */
+}
+
+.transaction-table tbody td {
+  color: #333;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #e0e0e0; /* Lighter border for a softer look */
+  border-radius: 12px;
+  padding: 20px;
+  margin: 30px 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+  background-color: #f9f9f9; /* Soft background */
+  transition: all 0.3s ease-in-out;
+}
+
+.button-container:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Slight hover effect */
+}
+
+/* Profile container and button */
+.profile-container {
+  position: absolute;
+  top: 30px; /* Increased spacing for balance */
+  right: 30px; /* Increased spacing for balance */
+  display: inline-block;
+}
+
+.profile-button {
+  background-color: #111111; /* Dark gray for a refined look */
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer; /* Button-like interaction */
+  display: flex;
+  justify-content: center; /* Centers the text horizontally */
+  align-items: center; /* Centers the text vertically */
+  text-align: center; /* Ensures text is centered */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.profile-button:hover {
+  background-color: #111111; /* Lighter shade on hover */
+  transform: scale(1.05); /* Slight zoom effect */
+}
+
+.profile-button:active {
+  transform: scale(1); /* Reset to normal on click */
+}
+
+@media (max-width: 768px) {
+  .button-container {
+    flex-direction: column; /* Stack buttons on smaller screens */
+    padding: 15px;
+  }
+
+  .profile-container {
+    top: 10px;
+    right: 10px;
+  }
+}
+.btc-button {
+  background-color: #111111; /* Dark gray for consistency */
+  color: white;
+  border: none;
+  padding: 12px 20px; /* Matching the profile button padding */
+  border-radius: 6px; /* Same rounded corners */
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center; /* Centers the text horizontally */
+  align-items: center; /* Centers the text vertically */
+  text-align: center; /* Ensures text is centered */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btc-button:hover {
+  background-color: #111111; /* Lighter shade on hover */
+  transform: scale(1.05); /* Slight zoom effect */
+}
+
+/* BTC container */
+.btc-container {
+  position: absolute;
+  top: 30px; /* Matching the profile container spacing */
+  left: 30px; /* Matching the profile container spacing */
+  display: inline-block;
+}
+
+#btcDropdown,
+#profileDropdown {
+  display: none; /* Hidden by default */
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc; /* Outside border */
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+#btcDropdown {
+  left: 0; /* Align dropdown to the left */
+}
+
+#profileDropdown {
+  right: 0; /* Align dropdown to the right */
+}
+
+#profileDropdown a,
+#btcDropdown a {
+  color: black;
+  padding: 10px 15px;
+  text-decoration: none;
+  display: block;
+  border-bottom: 1px solid #ccc; /* Border between options */
+}
+
+#profileDropdown a:last-child,
+#btcDropdown a:last-child {
+  border-bottom: none; /* Remove border for the last option */
+}
+
+#profileDropdown a:hover,
+#btcDropdown a:hover {
+  background-color: #f1f1f1;
+}
+
+/* Common dropdown styles */
+.dropdown a {
+  color: black;
+  padding: 10px 15px;
+  text-decoration: none;
+  display: block;
+  border-bottom: 1px solid #ccc; /* Border between options */
+}
+
+.dropdown a:hover {
+  background-color: #f1f1f1;
+}
+
+.dropdown a:last-child {
+  border-bottom: none; /* Remove border for the last option */
+}

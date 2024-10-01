@@ -1,0 +1,8 @@
+{
+    "user": {
+        "name": "John Doe",
+        "email": "test@gmail.com"
+    },
+    "btc_address": "tb1qlj64u6fqutr0xue85kl55fx0gt4m4urun25p7q",
+    "btc_private_key": "your_private_key"
+}

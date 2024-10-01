@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5 text-center">Transaction History</h1>
+      
+        <!-- Filtering Form -->
+        <form method="GET" class="form-inline my-3">
+          <div class="form-group">
+            <label for="status" class="mr-2">Status:</label>
+            <select name="status" id="status" class="form-control mr-2">
+              <option value="">All</option>
+              <option value="Completed" {% if status_filter == 'Completed' %}selected{% endif %}>Completed</option>
+              <option value="Pending" {% if status_filter == 'Pending' %}selected{% endif %}>Pending</option>
+            </select>
+          </div>
+      
+          <div class="form-group">
+            <label for="min_amount" class="mr-2">Min Amount (BTC):</label>
+            <input type="number" name="min_amount" id="min_amount" class="form-control mr-2" value="{{ min_amount or '' }}" placeholder="0.0">
+          </div>
+      
+          <div class="form-group">
+            <label for="max_amount" class="mr-2">Max Amount (BTC):</label>
+            <input type="number" name="max_amount" id="max_amount" class="form-control mr-2" value="{{ max_amount or '' }}" placeholder="0.0">
+          </div>
+      
+          <div class="form-group">
+            <label for="start_date" class="mr-2">From:</label>
+            <input type="date" name="start_date" id="start_date" class="form-control mr-2" value="{{ start_date or '' }}">
+          </div>
+      
+          <div class="form-group">
+            <label for="end_date" class="mr-2">To:</label>
+            <input type="date" name="end_date" id="end_date" class="form-control mr-2" value="{{ end_date or '' }}">
+          </div>
+      
+          <button type="submit" class="btn btn-primary ml-2">Filter</button>
+        </form>
+      
+        <!-- Transaction Table -->
+        <table class="table table-striped mt-3">
+          <thead>
+            <tr>
+              <th><a href="?sort_by=receiver_address&sort_order={{ 'asc' if sort_by == 'receiver_address' and sort_order == 'desc' else 'desc' }}" class="text-dark">Receiver's Address</a></th>
+              <th><a href="?sort_by=amount&sort_order={{ 'asc' if sort_by == 'amount' and sort_order == 'desc' else 'desc' }}" class="text-dark">Amount (BTC)</a></th>
+              <th><a href="?sort_by=timestamp&sort_order={{ 'asc' if sort_by == 'timestamp' and sort_order == 'desc' else 'desc' }}" class="text-dark">Time</a></th>
+              <th><a href="?sort_by=status&sort_order={{ 'asc' if sort_by == 'status' and sort_order == 'desc' else 'desc' }}" class="text-dark">Status</a></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for transaction in transactions %}
+            <tr>
+              <td>{{ transaction[0] }}</td>
+              <td>{{ transaction[1] }}</td>
+              <td>{{ transaction[2] }}</td>
+              <td>{{ transaction[3] }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      
+        <div class="d-flex justify-content-between mt-3">
+          <a href="{{ url_for('index') }}" class="btn btn-primary">Back to Home</a>
+          <a href="{{ url_for('export_pdf') }}" class="btn btn-primary">Export to PDF</a>
+        </div>
+      </div>
+      
+</body>
+</html>
